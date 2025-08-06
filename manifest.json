@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "ImmoScout24 Saver",
+  "version": "1.0",
+  "description": "Speichert Immobilieninserate von ImmoScout24.",
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": ["https://www.immobilienscout24.de/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ImmoScout24 Inserat speichern"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.immobilienscout24.de/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
