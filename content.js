@@ -1,6 +1,22 @@
+function getValue(val) {
+  if (!val) return null;
+  if (typeof val === 'object') {
+    if (Array.isArray(val)) {
+      return getValue(val[0]);
+    }
+    if ('value' in val) {
+      return val.value;
+    }
+    if ('amount' in val) {
+      return val.amount;
+    }
+  }
+  return val;
+}
+
 function parseNumber(value) {
-  if (!value) return null;
-  let str = value.toString().trim();
+  if (value === undefined || value === null) return null;
+  let str = getValue(value).toString().trim();
   if (str.includes(',')) {
     str = str.replace(/\./g, '').replace(',', '.');
   } else if (str.includes('.')) {
@@ -35,7 +51,8 @@ function extractListing() {
     size = parseNumber(sizeEl?.textContent);
   }
 
-  const price = parseNumber(data?.offers?.price) ||
+  const offers = Array.isArray(data.offers) ? data.offers[0] : data.offers || {};
+  const price = parseNumber(offers.price) ||
     parseNumber(Array.from(document.querySelectorAll('span, dd'))
       .find(el => /€/.test(el.textContent))?.textContent);
 
@@ -43,7 +60,7 @@ function extractListing() {
 
   let address = '';
   if (data.address) {
-    const addr = data.address;
+    const addr = Array.isArray(data.address) ? data.address[0] : data.address;
     address = [addr.streetAddress, addr.postalCode, addr.addressLocality]
       .filter(Boolean)
       .join(', ');
