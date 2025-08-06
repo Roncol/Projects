@@ -1,7 +1,16 @@
 function parseNumber(value) {
   if (!value) return null;
-  const normalized = value.toString().replace(/[^0-9.,]/g, '').replace(',', '.');
-  const num = parseFloat(normalized);
+  let str = value.toString().trim();
+  if (str.includes(',')) {
+    str = str.replace(/\./g, '').replace(',', '.');
+  } else if (str.includes('.')) {
+    const parts = str.split('.');
+    if (parts[parts.length - 1].length === 3) {
+      str = str.replace(/\./g, '');
+    }
+  }
+  str = str.replace(/[^0-9.-]/g, '');
+  const num = parseFloat(str);
   return isNaN(num) ? null : num;
 }
 
