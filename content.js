@@ -36,7 +36,11 @@ function extractListing() {
   if (jsonLd) {
     try {
       const parsed = JSON.parse(jsonLd.textContent);
-      data = Array.isArray(parsed) ? parsed[0] : parsed;
+      if (parsed && Array.isArray(parsed['@graph'])) {
+        data = parsed['@graph'].find((item) => item['@type'] === 'RealEstateListing') || {};
+      } else {
+        data = Array.isArray(parsed) ? parsed[0] : parsed;
+      }
     } catch (e) {
       // ignore parsing errors
     }
@@ -44,17 +48,18 @@ function extractListing() {
 
   const name = data.name || data.headline || document.querySelector('h1')?.innerText.trim() || '';
 
-  let size = parseNumber(data.floorSize);
+  let size = parseNumber(data.floorSize || data.livingSpace);
   if (!size) {
-    const sizeEl = Array.from(document.querySelectorAll('span, dd'))
-      .find(el => /\b(m²|qm)/i.test(el.textContent));
+    const sizeEl = document.querySelector('[class*="wohnflaeche"]');
     size = parseNumber(sizeEl?.textContent);
   }
 
   const offers = Array.isArray(data.offers) ? data.offers[0] : data.offers || {};
-  const price = parseNumber(offers.price) ||
-    parseNumber(Array.from(document.querySelectorAll('span, dd'))
-      .find(el => /€/.test(el.textContent))?.textContent);
+  let price = parseNumber(offers.price);
+  if (!price) {
+    const priceEl = document.querySelector('.is24qa-kaufpreis-main, dd.is24qa-kaufpreis');
+    price = parseNumber(priceEl?.textContent);
+  }
 
   const date = data.datePublished || new Date().toISOString().split('T')[0];
 
