@@ -1,6 +1,6 @@
 # ImmoScout24 Saver
 
-Chrome-Erweiterung zum Speichern von Inseraten vom Immobilienportal ImmoScout24. Nach einem Klick auf den Button im Popup werden Name des Inserats, Wohnfläche, Preis, Datum sowie – falls vorhanden – die Adresse erfasst. Zusätzlich berechnet das Plugin den Preis pro Quadratmeter und speichert alle Daten in `chrome.storage.local`.
+Chrome-Erweiterung zum Speichern von Inseraten vom Immobilienportal ImmoScout24. Nach einem Klick auf den Button im Popup werden Name des Inserats, Wohnfläche, Preis, Datum sowie – falls vorhanden – die Adresse und die URL erfasst. Zusätzlich berechnet das Plugin den Preis pro Quadratmeter und speichert alle Daten in `chrome.storage.local`. Bereits gespeicherte Inserate werden beim erneuten Speichern aktualisiert.
 
 ## Nutzung
 
@@ -9,4 +9,4 @@ Chrome-Erweiterung zum Speichern von Inseraten vom Immobilienportal ImmoScout24.
 3. Klicke auf **Entpackte Erweiterung laden** und wähle dieses Verzeichnis aus.
 4. Öffne ein ImmoScout24-Inserat und klicke im Popup der Erweiterung auf **Inserat speichern**.
 
-Die gespeicherten Daten sind unter dem Schlüssel `listings` in `chrome.storage.local` abgelegt.
+Die gespeicherten Daten sind unter dem Schlüssel `listings` in `chrome.storage.local` abgelegt. In der Liste gespeicherter Inserate können Details angezeigt und der Link zum Original-Inserat geöffnet werden.
