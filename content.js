@@ -68,7 +68,9 @@ function extractListing() {
 
   const pricePerSqm = price && size ? Math.round((price / size) * 100) / 100 : null;
 
-  return { name, size, price, date, address, pricePerSqm };
+  const url = window.location.href;
+
+  return { name, size, price, date, address, pricePerSqm, url };
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -80,9 +82,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     chrome.storage.local.get({ listings: [] }, (result) => {
       const listings = result.listings;
-      listings.push(listing);
+      const existingIndex = listings.findIndex(l => l.url === listing.url);
+      let updated = false;
+      if (existingIndex >= 0) {
+        listings[existingIndex] = listing;
+        updated = true;
+      } else {
+        listings.push(listing);
+      }
       chrome.storage.local.set({ listings }, () => {
-        sendResponse({ success: true, listing });
+        sendResponse({ success: true, listing, updated });
       });
     });
     return true; // indicates async response

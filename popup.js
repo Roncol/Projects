@@ -12,7 +12,7 @@ saveBtn.addEventListener('click', () => {
     }
     chrome.tabs.sendMessage(tab.id, { action: 'SAVE_LISTING' }, (response) => {
       if (response && response.success) {
-        statusEl.textContent = 'Inserat gespeichert.';
+        statusEl.textContent = response.updated ? 'Inserat aktualisiert.' : 'Inserat gespeichert.';
       } else {
         statusEl.textContent = 'Konnte keine Daten speichern.';
       }
@@ -21,13 +21,15 @@ saveBtn.addEventListener('click', () => {
 });
 
 function showDetails(listing) {
+  const link = listing.url ? `<a href="${listing.url}" target="_blank">Zum Inserat</a><br>` : '';
   detailsEl.innerHTML = `
     <strong>${listing.name}</strong><br>
     Größe: ${listing.size ?? ''}<br>
     Preis: ${listing.price ?? ''}<br>
     Datum: ${listing.date ?? ''}<br>
     Adresse: ${listing.address ?? ''}<br>
-    Preis pro m²: ${listing.pricePerSqm ?? ''}
+    Preis pro m²: ${listing.pricePerSqm ?? ''}<br>
+    ${link}
   `;
 }
 
