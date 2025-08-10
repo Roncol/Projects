@@ -4,14 +4,25 @@
   <meta charset="UTF-8" />
   <title>ImmoScout24 Saver</title>
   <style>
-    body { min-width: 200px; font-family: Arial, sans-serif; }
+    body { min-width: 200px; font-family: Arial, sans-serif; position: relative; }
     button { padding: 8px 12px; }
     #status { margin-top: 8px; }
+    #reloadBtn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+    }
   </style>
 </head>
 <body>
+  <button id="reloadBtn" title="Aktualisieren">&#x21bb;</button>
   <button id="saveBtn">Inserat speichern</button>
   <button id="viewBtn">Gespeicherte Inserate</button>
+  <button id="deleteBtn">Löschen</button>
   <div id="status"></div>
   <ul id="listings"></ul>
   <div id="details"></div>
