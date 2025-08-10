@@ -4,8 +4,17 @@
   <meta charset="UTF-8" />
   <title>ImmoScout24 Saver</title>
   <style>
-    body { min-width: 200px; font-family: Arial, sans-serif; position: relative; }
-    button { padding: 8px 12px; }
+    body {
+      min-width: 200px;
+      font-family: Arial, sans-serif;
+      position: relative;
+      font-size: 12px;
+    }
+    button {
+      padding: 4px 8px;
+      width: 160px;
+      font-size: 12px;
+    }
     #status { margin-top: 8px; }
     #reloadBtn {
       position: absolute;
@@ -15,6 +24,16 @@
       background: transparent;
       cursor: pointer;
       padding: 0;
+      width: auto;
+    }
+    #listings {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    #listings td {
+      border-bottom: 1px solid black;
+      padding: 4px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -24,7 +43,7 @@
   <button id="viewBtn">Gespeicherte Inserate</button>
   <button id="deleteBtn">Löschen</button>
   <div id="status"></div>
-  <ul id="listings"></ul>
+  <table id="listings"></table>
   <div id="details"></div>
   <script src="popup.js"></script>
 </body>
