@@ -1,5 +1,7 @@
 const saveBtn = document.getElementById('saveBtn');
 const viewBtn = document.getElementById('viewBtn');
+const deleteBtn = document.getElementById('deleteBtn');
+const reloadBtn = document.getElementById('reloadBtn');
 const statusEl = document.getElementById('status');
 const listingsEl = document.getElementById('listings');
 const detailsEl = document.getElementById('details');
@@ -49,4 +51,16 @@ viewBtn.addEventListener('click', () => {
       listingsEl.appendChild(li);
     });
   });
+});
+
+deleteBtn.addEventListener('click', () => {
+  chrome.storage.local.remove('listings', () => {
+    statusEl.textContent = 'Alle Inserate gelöscht.';
+    listingsEl.innerHTML = '';
+    detailsEl.innerHTML = '';
+  });
+});
+
+reloadBtn.addEventListener('click', () => {
+  chrome.runtime.reload();
 });
