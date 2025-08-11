@@ -1,7 +1,8 @@
 const saveBtn = document.getElementById('saveBtn');
 const viewBtn = document.getElementById('viewBtn');
 const deleteBtn = document.getElementById('deleteBtn');
-const reloadBtn = document.getElementById('reloadBtn');
+const checkBtn = document.getElementById('checkBtn');
+const resetBtn = document.getElementById('resetBtn');
 const statusEl = document.getElementById('status');
 const listingsEl = document.getElementById('listings');
 const detailsEl = document.getElementById('details');
@@ -62,7 +63,7 @@ function showDetails(listing) {
   currentDetailsUrl = listing.url;
 }
 
-viewBtn.addEventListener('click', () => {
+function renderListings(highlight) {
   chrome.storage.local.get({ listings: [] }, (result) => {
     const listings = result.listings.sort((a, b) => new Date(b.date) - new Date(a.date));
     listingsEl.innerHTML = '';
@@ -77,9 +78,24 @@ viewBtn.addEventListener('click', () => {
       td.textContent = `${listing.name} - ${listing.date}`;
       tr.appendChild(td);
       tr.addEventListener('click', () => showDetails(listing));
+      if (highlight) {
+        let matches = 0;
+        if (listing.name === highlight.name) matches++;
+        if (listing.address === highlight.address) matches++;
+        if (listing.size === highlight.size) matches++;
+        if (matches === 3) {
+          tr.style.backgroundColor = 'lightgreen';
+        } else if (matches === 2) {
+          tr.style.backgroundColor = 'lightyellow';
+        }
+      }
       listingsEl.appendChild(tr);
     });
   });
+}
+
+viewBtn.addEventListener('click', () => {
+  renderListings();
 });
 
 deleteBtn.addEventListener('click', () => {
@@ -90,6 +106,20 @@ deleteBtn.addEventListener('click', () => {
   });
 });
 
-reloadBtn.addEventListener('click', () => {
-  chrome.runtime.reload();
+checkBtn.addEventListener('click', () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tab = tabs[0];
+    if (!tab) return;
+    chrome.tabs.sendMessage(tab.id, { action: 'GET_LISTING' }, (response) => {
+      if (response && response.success) {
+        renderListings(response.listing);
+      } else {
+        statusEl.textContent = 'Konnte keine Daten prüfen.';
+      }
+    });
+  });
+});
+
+resetBtn.addEventListener('click', () => {
+  renderListings();
 });
