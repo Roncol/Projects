@@ -32,15 +32,18 @@ function parseNumber(value) {
 
 function extractListing() {
   let data = {};
-  const jsonLd = document.querySelector('script[type="application/ld+json"]');
-  if (jsonLd) {
+  const jsonLdScripts = document.querySelectorAll('script[type="application/ld+json"]');
+  for (const script of jsonLdScripts) {
     try {
-      const parsed = JSON.parse(jsonLd.textContent);
+      const parsed = JSON.parse(script.textContent);
       if (parsed && Array.isArray(parsed['@graph'])) {
         data = parsed['@graph'].find((item) => item['@type'] === 'RealEstateListing') || {};
-      } else {
-        data = Array.isArray(parsed) ? parsed[0] : parsed;
+      } else if (Array.isArray(parsed)) {
+        data = parsed.find((item) => item['@type'] === 'RealEstateListing') || parsed[0] || {};
+      } else if (parsed['@type'] === 'RealEstateListing') {
+        data = parsed;
       }
+      if (Object.keys(data).length) break;
     } catch (e) {
       // ignore parsing errors
     }
