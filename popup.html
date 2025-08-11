@@ -16,9 +16,9 @@
       font-size: 12px;
     }
     #status { margin-top: 8px; }
-    #reloadBtn {
+    #checkBtn,
+    #resetBtn {
       position: absolute;
-      top: 4px;
       right: 4px;
       border: none;
       background: transparent;
@@ -26,6 +26,8 @@
       padding: 0;
       width: auto;
     }
+    #checkBtn { top: 4px; }
+    #resetBtn { top: 28px; }
     #listings {
       border-collapse: collapse;
       width: 100%;
@@ -38,7 +40,8 @@
   </style>
 </head>
 <body>
-  <button id="reloadBtn" title="Aktualisieren">&#x21bb;</button>
+  <button id="checkBtn" title="Einträge prüfen">&#x2714;</button>
+  <button id="resetBtn" title="Farben zurücksetzen">&#x21ba;</button>
   <button id="saveBtn">Inserat speichern</button>
   <button id="viewBtn">Gespeicherte Inserate</button>
   <button id="deleteBtn">Löschen</button>

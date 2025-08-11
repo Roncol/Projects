@@ -101,4 +101,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     });
     return true; // indicates async response
   }
+  if (request.action === 'GET_LISTING') {
+    const listing = extractListing();
+    if (!listing.name && !listing.price) {
+      sendResponse({ success: false });
+      return;
+    }
+    sendResponse({ success: true, listing });
+  }
 });
