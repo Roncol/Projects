@@ -9,6 +9,12 @@ const detailsEl = document.getElementById('details');
 
 let currentDetailsUrl = null;
 
+function updateViewBtnCount() {
+  chrome.storage.local.get({ listings: [] }, (result) => {
+    viewBtn.textContent = `Gespeicherte Inserate (${result.listings.length})`;
+  });
+}
+
 function formatCurrency(value) {
   if (value === null || value === undefined) return '';
   const hasDecimals = Math.round(value * 100) % 100 !== 0;
@@ -37,6 +43,7 @@ saveBtn.addEventListener('click', () => {
     chrome.tabs.sendMessage(tab.id, { action: 'SAVE_LISTING' }, (response) => {
       if (response && response.success) {
         statusEl.textContent = response.updated ? 'Inserat aktualisiert.' : 'Inserat gespeichert.';
+        updateViewBtnCount();
       } else {
         statusEl.textContent = 'Konnte keine Daten speichern.';
       }
@@ -68,6 +75,7 @@ function renderListings(highlight) {
     const listings = result.listings.sort((a, b) => new Date(b.date) - new Date(a.date));
     listingsEl.innerHTML = '';
     detailsEl.innerHTML = '';
+    updateViewBtnCount();
     if (listings.length === 0) {
       listingsEl.innerHTML = '<tr><td>Keine Inserate gespeichert.</td></tr>';
       return;
@@ -76,6 +84,19 @@ function renderListings(highlight) {
       const tr = document.createElement('tr');
       const td = document.createElement('td');
       td.textContent = `${listing.name} - ${listing.date}`;
+      const del = document.createElement('span');
+      del.className = 'delete-icon';
+      del.innerHTML = '&#128465;';
+      del.addEventListener('click', (e) => {
+        e.stopPropagation();
+        chrome.storage.local.get({ listings: [] }, (res) => {
+          const newList = res.listings.filter((l) => l.url !== listing.url);
+          chrome.storage.local.set({ listings: newList }, () => {
+            renderListings();
+          });
+        });
+      });
+      td.appendChild(del);
       tr.appendChild(td);
       tr.addEventListener('click', () => showDetails(listing));
       if (highlight) {
@@ -103,6 +124,7 @@ deleteBtn.addEventListener('click', () => {
     statusEl.textContent = 'Alle Inserate gelöscht.';
     listingsEl.innerHTML = '';
     detailsEl.innerHTML = '';
+    updateViewBtnCount();
   });
 });
 
@@ -123,3 +145,5 @@ checkBtn.addEventListener('click', () => {
 resetBtn.addEventListener('click', () => {
   renderListings();
 });
+
+updateViewBtnCount();
